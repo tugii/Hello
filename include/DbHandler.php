@@ -118,29 +118,25 @@ class DbHandler {
         return $num_rows > 0;
     }
 
-    /**
-     * Fetching user by email
-     * @param String $email User email id
-     */
-    public function getUserByEmail($email) {
-        $stmt = $this->conn->prepare("SELECT name, email, api_key, status, created_at FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        if ($stmt->execute()) {
-            // $user = $stmt->get_result()->fetch_assoc();
-            $stmt->bind_result($name, $email, $api_key, $status, $created_at);
-            $stmt->fetch();
-            $user = array();
-            $user["name"] = $name;
-            $user["email"] = $email;
-            $user["api_key"] = $api_key;
-            $user["status"] = $status;
-            $user["created_at"] = $created_at;
-            $stmt->close();
-            return $user;
-        } else {
-            return NULL;
-        }
-    }
+
+	
+	public function getShopById($shop_id)
+	{
+	
+		$sql = $this->conn->prepare("SELECT * from shop WHERE ID = ?");
+		$sql->bind_param("i", $shop_id);
+		if($sql->execute()) {
+			//$sql->bind_result($id, $Description, $Lang, $Lat);			
+			
+			$shop = $sql->get_result()->fetch_assoc();
+			
+			$sql->close();
+			return $shop;
+		} else {
+			return NULL;
+		}
+		
+	}
 
     /**
      * Fetching user api key

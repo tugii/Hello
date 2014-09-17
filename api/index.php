@@ -1,4 +1,6 @@
 <?php
+
+require_once '../include/DbHandler.php';
 require 'Slim/Slim.php';
 
 \Slim\Slim::registerAutoloader();
@@ -30,7 +32,19 @@ function echoResponse($response)
 
 $app->get('/getShop/:id', function($id){
 
-	echoResponse('Mein Shop:' . $id);
+		$response = array();
+		$db= new DbHandler();
+		$result = $db->getShopById($id);
+		if($result !=NULL)
+		{
+			$response["ID"] = $result["ID"];
+			$response["Description"] = 	 $result["Description"];
+			$response["Longtitude"] 		 =	 $result["Longtitude"];
+			$response["Latitude"] 		 = 	 $result["Latitude"];
+			
+			echoResponse($response);
+		}
+	
 });
 
 $app->post('/search', function() use($app){
