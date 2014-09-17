@@ -13,14 +13,33 @@ require 'Slim/Slim.php';
  */
 $app = new \Slim\Slim();
 
-$app->get('/test', 'getTest');
 
-
-function getTest()
+function echoResponseWithStatus($statusCode, $response)
 {
-
- echo '{"test": "Hallo Welt"}';
+	$app = \Slim\Slim::getInstance();
+	$app->status($statusCode);
+	$app->contentType('application/json');
+	
+	echo json_encode($response);
 }
+
+function echoResponse($response)
+{
+	echoResponseWithStatus(200, $response);
+}
+
+$app->get('/getShop/:id', function($id){
+
+	echoResponse('Mein Shop:' . $id);
+});
+
+$app->post('/search', function() use($app){
+		$searchQuery = $app->request()->post('searchQuery');
+		
+		echoResponse('Meine suchresultate');
+});
+
+
 
 $app->run();
 
