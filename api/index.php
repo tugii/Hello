@@ -30,6 +30,21 @@ function echoResponse($response)
 	echoResponseWithStatus(200, $response);
 }
 
+$app->get('/getShops', function(){
+	$db= new DbHandler();
+	$result = $db->getShops();
+	
+	echoResponse($result);
+});
+
+$app->get('/getShopByCompany/:id', function($id)
+{
+	$db= new DbHandler();
+	$result = $db->getShopByCompanyId($id);
+	
+	echoResponse($result);
+});
+
 $app->get('/getShop/:id', function($id){
 
 		$response = array();
@@ -37,14 +52,21 @@ $app->get('/getShop/:id', function($id){
 		$result = $db->getShopById($id);
 		if($result !=NULL)
 		{
-			$response["ID"] = $result["ID"];
-			$response["Description"] = 	 $result["Description"];
-			$response["Longtitude"] 		 =	 $result["Longtitude"];
-			$response["Latitude"] 		 = 	 $result["Latitude"];
+			$response = $result;
+			//$response["ID"] = $result["ID"];
+			//$response["Description"] = 	 $result["Description"];
+			//$response["Longtitude"] 		 =	 $result["Longtitude"];
+			//$response["Latitude"] 		 = 	 $result["Latitude"];
 			
 			echoResponse($response);
 		}
 	
+});
+
+$app->post('/rateShop', function(){
+	$request = $app->request();
+    $body = $request->getBody();
+    $event = json_decode($body);
 });
 
 $app->post('/search', function() use($app){

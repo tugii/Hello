@@ -117,8 +117,41 @@ class DbHandler {
         $stmt->close();
         return $num_rows > 0;
     }
+	
+	public function getData($sql, $intParam)
+	{
+			$sql = $this->conn->prepare($sql);
+		$sql->bind_param("i", $intParam);
+		if($sql->execute()) {
+			
+			
+			$res = $sql->get_result()->fetch_assoc();
+			
+			$sql->close();
+			return $res;
+		} else {
+			return NULL;
+		}		
+	}
 
-
+	public function getShopByCompanyId($company_id)
+	{
+		$sql = $this->conn->prepare("SELECT * from shop WHERE Company_ID = ?");
+		$sql->bind_param("i", $company_id);
+		if($sql->execute())
+		{
+			$res = $sql->get_result()->fetch_all();
+			$sql->close();
+			
+			return $res;
+		}
+		return NULL;
+	}
+	
+	public function getRateOfShopId($shop_id)
+	{
+		return getData("SELECT * from rating where Shop_ID = ?", $shop_id);
+	}
 	
 	public function getShopById($shop_id)
 	{
@@ -134,8 +167,20 @@ class DbHandler {
 			return $shop;
 		} else {
 			return NULL;
+		}		
+	}
+	
+	public function getShops()
+	{
+		$sql = $this->conn->prepare("SELECT * from shop");
+		if($sql->execute())
+		{
+			$res = $sql->get_result()->fetch_all();
+			$sql->close();
+			
+			return $res;
 		}
-		
+		return NULL;
 	}
 
     /**
